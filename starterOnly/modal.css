@@ -226,7 +226,23 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
+.confirmationMessage{
+  display:none;
+}
+.confirmationMessageShow{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height:70px;
+  gap:10px;
+}
+.errorMessage{
+  display:none;
+  color:#f00;
+}
 /* 
+
 input[data-error]::after {
     content: attr(data-error);
     font-size: 0.4em;
