@@ -9,122 +9,175 @@ function editNav() {
 
 // DOM Elements
 const modalbg = document.querySelector(".bground");
-const modalForm = document.querySelector(".subscribe-form");
 const modalBtn = document.querySelectorAll(".modal-btn");
-const modalConfirm = document.querySelector(".confirmationMessage")
-const modalError = document.querySelector(".errorMessage")
-const formData = document.querySelectorAll(".formData");
-const closeBtn = document.getElementsByClassName("close");
-const validateFormBtn = document.getElementsByClassName("btn-submit");
-const subscribeForm = document.getElementsByClassName("subscribe-Form");
-// verifications
-const regexMail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const regexName = /^.{2,}$/
+const closeCross = document.querySelector(".close");
+const form = document.querySelector("form");
+const modalBdy = document.querySelector(".modal-body");
+
+// Form fields
+const firstname = document.getElementById("first");
+const lastname = document.getElementById("last");
+const email = document.getElementById("email");
+const birth = document.getElementById("birthdate");
+const quantityField = document.getElementById("quantity");
+const locationRadios = document.querySelectorAll('input[name="location"]');
+const termsCheckbox = document.getElementById("checkbox1");
 
 
-// launch modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
-
-// launch modal form
-function launchModal() {
+// Launch modal
+modalBtn.forEach((btn) => btn.addEventListener("click", () => {
   modalbg.style.display = "block";
-}
-//close modal form
-function closeModal() {
+  window.scrollTo({ top: 0 });
+}));
+
+// Close modal
+closeCross.addEventListener("click", () => {
   modalbg.style.display = "none";
-}
-// show confirmation message
-function showConfirmationMessage(message) {
-  const confirmationDiv = document.getElementById("confirmationMessage");
-  confirmationDiv.innerText = message;
-  subscribeForm.style.display = "none";
-  confirmationDiv.style.display = "block";
-}
-// close modal form when click close button
-closeBtn[0].addEventListener("click", closeModal);
 
-// close modal form when click outside
-window.onclick = function (event) {
-  if (event.target == modalbg) {
-    modalbg.style.display = "none";
+  // Vérifie si le formulaire a été validé
+  if (form.classList.contains("success-form")) {
+    form.classList.remove("success-form"); // Supprime l'indicateur de validation
+    modalBdy.querySelectorAll(".success").forEach((success) => success.remove()); // Supprime le message de succès
+    form.reset();
   }
-};
+});
 
-// submit form
 
-function validateField(value, validation, errorMsg) { if (!value || !validation.test(value)) { return errorMsg; } return ""; }
-let firstName = document.forms["reserve"]["first"].value;
-let lastName = document.forms["reserve"]["last"].value;
-let email = document.forms["reserve"]["email"].value;
-let birthdate = document.forms["reserve"]["birthdate"].value;
-let quantity = document.forms["reserve"]["quantity"].value;
-let location = document.forms["reserve"]["location"].value;
-let checkbox = document.forms["reserve"]["checkbox1"].checked;
-document.getElementById("modalForm").addEventListener("submit"), function (event) {
+
+// Fonction pour valider le format de l'e-mail
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Fonction pour vérifier si un nombre est valide (entre 0 et 99)
+function isValidNumber(value) {
+  const num = parseInt(value, 10);
+  return num >= 0 && num <= 99;
+}
+
+
+// Fonction pour afficher un message d'erreur
+function displayError(element, message) {
+  const parentElement = element.closest('.formData');
+  let error = parentElement.querySelector(".error-message");
+  if (!error) {
+    error = document.createElement("p");
+    error.classList.add("error-message");
+    parentElement.appendChild(error);
+  }
+  error.textContent = message;
+}
+
+// Fonction pour supprimer les messages d'erreur
+function removeError(element) {
+  const parentElement = element.closest('.formData');
+  const error = parentElement.querySelector(".error-message");
+  if (error) {
+    error.remove();
+  }
+}
+
+
+// Écouteur d'événement pour le formulaire
+form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const fields = [
 
+  let isValid = true;
+
+  // Validation des champs
+  const validations = [
     {
-      id: "firstname", value: firstname.lenght,
-      validation: regexName, errorMsg: ["Le prénom ne peut pas être vide.", "Le prénom doit contenir au minimum 2 lettres."]
+      field: firstname,
+      valid: firstname.value.trim().length >= 2,
+      message: "Veuillez entrer au moins 2 caractères."
     },
     {
-      id: "lastname", value: lastname.lenght,
-      validation: regexName, errorMsg: ["Le nom ne peut pas être vide.", "Le nom doit contenir au minimum 2 lettres."]
+      field: lastname,
+      valid: lastname.value.trim().length >= 2,
+      message: "Veuillez entrer au moins 2 caractères."
     },
     {
-      id: "email", value: document.getElementById("email").value,
-      validation: regexMail, errorMsg: ["L'email ne peut pas être vide.", "L'email doit être valide."]
-    }
+      field: email,
+      valid: validateEmail(email.value),
+      message: "Veuillez entrer une adresse email valide."
+    },
+    {
+      field: birth,
+      valid: function () {
+        removeError(birth);
 
+        if (!birth.value) {
+          displayError(birth, "Veuillez entrer une date de naissance valide.");
+          return false;
+        }
+
+        const birthDate = new Date(birth.value);
+        const today = new Date();
+
+        if (birthDate > today) {
+          displayError(birth, "La date de naissance doit être dans le passé.");
+          return false;
+        }
+        return true;
+      },
+      message: ""
+    },
+
+    {
+      field: quantityField,
+      valid: isValidNumber(quantityField.value.trim()),
+      message: "Veuillez entrer un nombre entre 0 et 99."
+    },
+    {
+      field: locationRadios[0],
+      valid: Array.from(locationRadios).some((radio) => radio.checked),
+      message: "Veuillez sélectionner une localisation."
+    },
+    {
+      field: termsCheckbox,
+      valid: termsCheckbox.checked,
+      message: "Vous devez accepter les conditions générales."
+    },
   ];
-  let valid = true; 
-  fields.forEach(field => {
-    let error = validateField(field.value, field.validation, field.errorMsg[1]);
-    if (!field.value) { error = field.errorMsg[0]; } document.getElementById(`${field.id}Error`).textContent = error; if (error) valid = false;
+
+  // Validations de chaque formulaire
+  validations.forEach(({ field, valid, message }) => {
+    const isFieldValid = typeof valid === "function" ? valid() : valid; //Validation avec une fonction
+    if (!isFieldValid) {
+      if (message) {
+        displayError(field, message);
+      }
+      isValid = false;
+    } else {
+      removeError(field);
+    }
   });
-  if (valid) {
-    modalForm.style.display = "none"
-    modalConfirm.classList.add('confirmationMessageShow')
-  };
-
-// function validate(event) {
-// event.preventDefault();
-// let firstName = document.forms["reserve"]["first"].value;
-// let lastName = document.forms["reserve"]["last"].value;
-// let email = document.forms["reserve"]["email"].value;
-// let birthdate = document.forms["reserve"]["birthdate"].value;
-// let quantity = document.forms["reserve"]["quantity"].value;
-// let location = document.forms["reserve"]["location"].value;
-// let checkbox = document.forms["reserve"]["checkbox1"].checked;
-
-//   if (firstName == "" || lastName == "" || email == "" || birthdate == "" || quantity == "" || location == "" || checkbox == false) {
-
-//     modalError.style.display = "block"
-//     return false;
-//   }
-//   else if (firstName.length < 2) {
-//     firstNameError.style.display = "block"
-//   }
-//   else if (lastName.length < 2) {
-//     lastNameError.style.display = "block"
-//   }
-//   else if (regexMail.test(email)) {
-//     mailError.style.display = "block"
-//   }
-//   else if (location == "") {
-//     locationError.style.display = "block"
-//   }
-
-//   else if (date <= dateajd) {
-//     dateError.style.display = "block"
-//   }
 
 
-//   else {
-//     modalForm.style.display = "none"
-//     modalConfirm.classList.add('confirmationMessageShow')
 
-//     return true;
-//   }
-// }
+  // Afficher un message de succès si toutes les validations sont passées
+  if (isValid) {
+    form.classList.add("success-form");
+    const validate = document.createElement("div");
+    validate.classList.add("success");
+    const validateTxt = document.createElement("p");
+    validateTxt.textContent = "Merci pour votre inscription !";
+    validateTxt.classList.add("success-message");
+    modalBdy.appendChild(validate);
+    validate.appendChild(validateTxt);
+    form.reset();
+  }
+});
+
+//Enlever les messages d'erreur lors de la correction
+[firstname, lastname, email, birth, quantityField].forEach((field) => {
+  field.addEventListener("input", () => removeError(field));
+});
+
+//Suppression du message d'erreur quand une case est cochée
+locationRadios.forEach((radio) => {
+  radio.addEventListener("change", () => removeError(locationRadios[0]));
+});
+
+termsCheckbox.addEventListener("change", () => removeError(termsCheckbox));

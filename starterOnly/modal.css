@@ -532,7 +532,10 @@ footer {
     text-align: center;
   }
 }
-
+.error-message {
+  color: #f00;
+  font-size: 15px;
+}
 @keyframes modalopen {
   from {
     opacity: 0;
