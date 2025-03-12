@@ -34,34 +34,35 @@ modalBtn.forEach((btn) => btn.addEventListener("click", () => {
 closeCross.addEventListener("click", () => {
   modalbg.style.display = "none";
 
-  // Vérifie si le formulaire a été validé
+  // Check if the form is valid
   if (form.classList.contains("success-form")) {
-    form.classList.remove("success-form"); // Supprime l'indicateur de validation
-    modalBdy.querySelectorAll(".success").forEach((success) => success.remove()); // Supprime le message de succès
+    form.classList.remove("success-form"); // Remove success indicator
+    modalBdy.querySelectorAll(".success").forEach((success) => success.remove()); // Remove success message
     form.reset();
   }
 });
 
 
 
-// Fonction pour valider le format de l'e-mail
+// Check if the mail is valid with a regex
 function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-// Fonction pour vérifier si un nombre est valide (entre 0 et 99)
+// Check if the number is betweend 0 and 99 (Convert string to num withe base 10)
 function isValidNumber(value) {
   const num = parseInt(value, 10);
   return num >= 0 && num <= 99;
 }
 
 
-// Fonction pour afficher un message d'erreur
+// Display the error message
 function displayError(element, message) {
   const parentElement = element.closest('.formData');
   let error = parentElement.querySelector(".error-message");
   if (!error) {
+
     error = document.createElement("p");
     error.classList.add("error-message");
     parentElement.appendChild(error);
@@ -69,7 +70,7 @@ function displayError(element, message) {
   error.textContent = message;
 }
 
-// Fonction pour supprimer les messages d'erreur
+// Remove the error message
 function removeError(element) {
   const parentElement = element.closest('.formData');
   const error = parentElement.querySelector(".error-message");
@@ -79,13 +80,13 @@ function removeError(element) {
 }
 
 
-// Écouteur d'événement pour le formulaire
+// Evend listener on the form
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   let isValid = true;
 
-  // Validation des champs
+  // Fields validations
   const validations = [
     {
       field: firstname,
@@ -141,9 +142,9 @@ form.addEventListener("submit", (event) => {
     },
   ];
 
-  // Validations de chaque formulaire
+  // Validations of each form
   validations.forEach(({ field, valid, message }) => {
-    const isFieldValid = typeof valid === "function" ? valid() : valid; //Validation avec une fonction
+    const isFieldValid = typeof valid === "function" ? valid() : valid; //Check if element.field is a function if it is return the result of the function, if it's not return the content of the element.
     if (!isFieldValid) {
       if (message) {
         displayError(field, message);
@@ -156,7 +157,7 @@ form.addEventListener("submit", (event) => {
 
 
 
-  // Afficher un message de succès si toutes les validations sont passées
+  // Success message appear if everything is ok
   if (isValid) {
     form.classList.add("success-form");
     const validate = document.createElement("div");
@@ -170,12 +171,12 @@ form.addEventListener("submit", (event) => {
   }
 });
 
-//Enlever les messages d'erreur lors de la correction
+// Remove error message when input is used
 [firstname, lastname, email, birth, quantityField].forEach((field) => {
   field.addEventListener("input", () => removeError(field));
 });
 
-//Suppression du message d'erreur quand une case est cochée
+// Remove error message when something change
 locationRadios.forEach((radio) => {
   radio.addEventListener("change", () => removeError(locationRadios[0]));
 });
