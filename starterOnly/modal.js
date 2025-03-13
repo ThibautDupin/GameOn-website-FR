@@ -144,7 +144,9 @@ form.addEventListener("submit", (event) => {
 
   // Validations of each form
   validations.forEach(({ field, valid, message }) => {
-    const isFieldValid = typeof valid === "function" ? valid() : valid; //Check if element.field is a function if it is return the result of the function, if it's not return the content of the element.
+    const isFieldValid = typeof valid === "function" ? valid() : valid; 
+    //Check if element.field is a function if it is return the result of the function, 
+    // if it's not return the content of the element.
     if (!isFieldValid) {
       if (message) {
         displayError(field, message);
