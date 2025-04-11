@@ -1,5 +1,5 @@
 function editNav() {
-  var x = document.getElementById("myTopnav");
+  const x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
     x.className += " responsive";
   } else {
@@ -43,7 +43,6 @@ closeCross.addEventListener("click", () => {
 });
 
 
-
 // Check if the mail is valid with a regex
 function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -83,7 +82,7 @@ function removeError(element) {
 // Evend listener on the form
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-
+  
   let isValid = true;
 
   // Fields validations
@@ -162,14 +161,23 @@ form.addEventListener("submit", (event) => {
   // Success message appear if everything is ok
   if (isValid) {
     form.classList.add("success-form");
+    form.style.display = "none"; 
     const validate = document.createElement("div");
     validate.classList.add("success");
     const validateTxt = document.createElement("p");
     validateTxt.textContent = "Merci pour votre inscription !";
     validateTxt.classList.add("success-message");
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Fermer";
+    closeBtn.classList.add("btn-validate");
+    const validateDiv = document.createElement("div");
+    validateDiv.classList.add("validateDiv");
     modalBdy.appendChild(validate);
-    validate.appendChild(validateTxt);
-    form.reset();
+    validate.appendChild(validateDiv)
+    validateDiv.appendChild(validateTxt);
+    validateDiv.appendChild(closeBtn);
+    form.reset()
+  ;
   }
 });
 
