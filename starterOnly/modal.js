@@ -13,7 +13,7 @@ const modalBtn = document.querySelectorAll(".modal-btn");
 const closeCross = document.querySelector(".close");
 const form = document.querySelector("form");
 const modalBdy = document.querySelector(".modal-body");
-
+const validateDiv=document.getElementsByClassName("validateDiv");
 // Form fields
 const firstname = document.getElementById("first");
 const lastname = document.getElementById("last");
@@ -23,10 +23,10 @@ const quantityField = document.getElementById("quantity");
 const locationRadios = document.querySelectorAll('input[name="location"]');
 const termsCheckbox = document.getElementById("checkbox1");
 
-
 // Launch modal
 modalBtn.forEach((btn) => btn.addEventListener("click", () => {
   modalbg.style.display = "block";
+  form.style.display = "block"; 
   window.scrollTo({ top: 0 });
 }));
 
@@ -41,6 +41,8 @@ closeCross.addEventListener("click", () => {
     form.reset();
   }
 });
+
+
 
 
 // Check if the mail is valid with a regex
@@ -164,23 +166,23 @@ form.addEventListener("submit", (event) => {
     form.style.display = "none"; 
     const validate = document.createElement("div");
     validate.classList.add("success");
-    const validateTxt = document.createElement("p");
-    validateTxt.textContent = "Merci pour votre inscription !";
-    validateTxt.classList.add("success-message");
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "Fermer";
-    closeBtn.classList.add("btn-validate");
-    const validateDiv = document.createElement("div");
-    validateDiv.classList.add("validateDiv");
-    modalBdy.appendChild(validate);
-    validate.appendChild(validateDiv)
-    validateDiv.appendChild(validateTxt);
-    validateDiv.appendChild(closeBtn);
-    form.reset()
-  ;
+    validateDiv[0].classList.add("validateDivOk");
+    
+                  
   }
 });
+const closeButton = document.querySelector(".close-button");
+// //Close modal with validate button
+closeButton.addEventListener("click", () => {
+  modalbg.style.display = "none";
 
+  if(form.classList.contains("success-form")) {
+    form.classList.remove("success-form"); // Remove success indicator
+    modalBdy.querySelectorAll(".success").forEach((success) => success.remove()); // Remove success message
+    form.reset()
+    validateDiv[0].classList.remove("validateDivOk");
+  }
+});
 // Remove error message when input is used
 [firstname, lastname, email, birth, quantityField].forEach((field) => {
   field.addEventListener("input", () => removeError(field));
