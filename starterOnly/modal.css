@@ -89,7 +89,12 @@ img {
   text-align: center;
   display: none;
 }
-
+.subscribe-form{
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height:100%
+}
 @media screen and (max-width: 768px) {
   .topnav a {
     display: none;
@@ -303,7 +308,7 @@ input {
 
 .validateContainer {
   height: 70vh;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: end;
 }
@@ -609,10 +614,6 @@ input[data-error]::after {
     max-height: 100%;
   }
 
-  .content {
-    margin: 5% auto 0 auto;
-    padding-bottom: 10px;
-  }
 
   .close-button {
     margin-bottom: 10px;
@@ -648,7 +649,7 @@ input[data-error]::after {
   }
 
   .modal-body {
-    height: auto;
+    max-height:unset;
   }
 
 
@@ -679,6 +680,7 @@ input[data-error]::after {
     margin: 0;
     padding: 0;
     border-radius: 0px;
+    height:100%;
   }
 
   .hero-content::after {
@@ -705,10 +707,6 @@ input[data-error]::after {
     margin-top: 40px;
   }
 
-  .modal-body {
-    height: 90vh;
-    padding: 0px 8%
-  }
 
   .hero-section>.btn-signup {
     display: block;

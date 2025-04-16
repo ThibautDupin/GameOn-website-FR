@@ -14,6 +14,7 @@ const closeCross = document.querySelector(".close");
 const form = document.querySelector("form");
 const modalBdy = document.querySelector(".modal-body");
 const validateDiv=document.getElementsByClassName("validateDiv");
+const validateContainer = document.getElementsByClassName("validateContainer");
 // Form fields
 const firstname = document.getElementById("first");
 const lastname = document.getElementById("last");
@@ -166,7 +167,8 @@ form.addEventListener("submit", (event) => {
     form.style.display = "none"; 
     const validate = document.createElement("div");
     validate.classList.add("success");
-    validateDiv[0].classList.add("validateDivOk");
+    validateDiv[0].classList.add("validateDivOk")
+    validateContainer[0].style.display = "flex"
     
                   
   }
@@ -181,6 +183,7 @@ closeButton.addEventListener("click", () => {
     modalBdy.querySelectorAll(".success").forEach((success) => success.remove()); // Remove success message
     form.reset()
     validateDiv[0].classList.remove("validateDivOk");
+    validateContainer[0].style.display = "none";
   }
 });
 // Remove error message when input is used
