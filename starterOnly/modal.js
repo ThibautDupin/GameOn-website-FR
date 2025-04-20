@@ -1,12 +1,3 @@
-function editNav() {
-  const x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }
-}
-
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
@@ -15,6 +6,11 @@ const form = document.querySelector("form");
 const modalBdy = document.querySelector(".modal-body");
 const validateDiv=document.getElementsByClassName("validateDiv");
 const validateContainer = document.getElementsByClassName("validateContainer");
+const burgerBtn = document.getElementById("burger-btn");
+const topNav = document.getElementById("myTopnav");
+const mainNavbar = document.querySelector(".main-navbar");
+const topNavLinks = document.querySelectorAll(".topnav a");
+const iconMenu = document.querySelector("iconMenu");
 // Form fields
 const firstname = document.getElementById("first");
 const lastname = document.getElementById("last");
@@ -24,6 +20,23 @@ const quantityField = document.getElementById("quantity");
 const locationRadios = document.querySelectorAll('input[name="location"]');
 const termsCheckbox = document.getElementById("checkbox1");
 
+burgerBtn?.addEventListener("click", () => {
+  if (window.innerWidth <= 768) {
+    if (mainNavbar.classList.contains("burger-menu")) {
+      mainNavbar.classList.remove("burger-menu");
+      topNavLinks.forEach((link) => { link.style.display = "none"; });
+      burgerBtn.style.display = "block";
+      burgerBtn.style.color = "black";
+
+    } else {
+      mainNavbar.classList.add("burger-menu");
+      topNavLinks.forEach((link) => { link.style.display = "block"; });
+      burgerBtn.style.color = "white";
+      
+
+    }
+  }
+});
 // Launch modal
 modalBtn.forEach((btn) => btn.addEventListener("click", () => {
   modalbg.style.display = "block";
